@@ -24,13 +24,23 @@ h1 {
   margin-top: 40px;
 }
 
-/* ✅ BILDER FIX */
 img {
   width: 100%;
   height: 100vh;
-  object-fit: contain; /* NICHT abgeschnitten */
+  object-fit: contain;
   display: none;
-  margin: 0;
+}
+
+/* 🎉 END TEXT */
+#endText {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  display: none;
+  opacity: 0;
+  transition: opacity 1.5s ease;
 }
 
 /* Button */
@@ -44,7 +54,6 @@ button {
   cursor: pointer;
 }
 
-/* Konfetti */
 canvas {
   position: fixed;
   top: 0;
@@ -59,9 +68,12 @@ canvas {
 <h1>🎂 Alles Gute zum Geburtstag! 🎂</h1>
 <p id="text">Bereit? 😏</p>
 
-<button onclick="startExperience()">🎉 Start</button>
+<button onclick="startExperience()">🎉 Start (mit Ton)</button>
 
 <div id="countdown"></div>
+
+<!-- 🎉 FINAL TEXT -->
+<div id="endText">🎉 Alles Gute zum Geburtstag! 🎉</div>
 
 <audio id="music" src="moodmode-happy-birthday-song-455067.mp3"></audio>
 
@@ -82,13 +94,6 @@ canvas {
 
 <script>
 function startExperience() {
-  let music = document.getElementById("music");
-
-  // 🔊 WICHTIG für iPhone
-  music.play().catch(() => {
-    alert("🔊 Bitte nochmal tippen für Ton");
-  });
-
   document.querySelector("button").style.display = "none";
 
   if (document.documentElement.requestFullscreen) {
@@ -110,7 +115,6 @@ function startCountdown() {
       clearInterval(interval);
       display.innerText = "";
 
-      // Text ausblenden
       document.getElementById("text").style.display = "none";
       document.querySelector("h1").style.display = "none";
 
@@ -120,6 +124,12 @@ function startCountdown() {
 }
 
 function startShow() {
+  let music = document.getElementById("music");
+
+  music.play().catch(() => {
+    alert("🔊 Tippe nochmal für Ton");
+  });
+
   startConfetti();
 
   let images = document.querySelectorAll("img");
@@ -136,12 +146,22 @@ function startShow() {
     } else {
       clearInterval(interval);
 
-      // 🎵 Musik stoppen
-      let music = document.getElementById("music");
       music.pause();
       music.currentTime = 0;
+
+      showEndText(); // 🎉 NEU
     }
-  }, 2500); // bisschen länger = besser
+  }, 2500);
+}
+
+// 🎉 END TEXT FUNKTION
+function showEndText() {
+  let text = document.getElementById("endText");
+  text.style.display = "block";
+
+  setTimeout(() => {
+    text.style.opacity = 1;
+  }, 100);
 }
 
 // 🎆 KONFETTI
