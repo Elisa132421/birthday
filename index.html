@@ -20,18 +20,20 @@ h1 {
 }
 
 #countdown {
-  font-size: 50px;
+  font-size: 60px;
   margin-top: 40px;
 }
 
+/* ✅ BILDER FIX */
 img {
   width: 100%;
   height: 100vh;
-  object-fit: cover;
+  object-fit: contain; /* NICHT abgeschnitten */
   display: none;
   margin: 0;
 }
 
+/* Button */
 button {
   padding: 15px 30px;
   font-size: 18px;
@@ -42,6 +44,7 @@ button {
   cursor: pointer;
 }
 
+/* Konfetti */
 canvas {
   position: fixed;
   top: 0;
@@ -54,7 +57,7 @@ canvas {
 <body>
 
 <h1>🎂 Alles Gute zum Geburtstag! 🎂</h1>
-<p>Bereit? 😏</p>
+<p id="text">Bereit? 😏</p>
 
 <button onclick="startExperience()">🎉 Start (mit Ton)</button>
 
@@ -81,11 +84,9 @@ canvas {
 function startExperience() {
   let music = document.getElementById("music");
 
-  // 🔊 Musik direkt beim Klick starten (wichtig für iPhone!)
-  music.play().then(() => {
-    console.log("Musik läuft");
-  }).catch(() => {
-    alert("🔊 Bitte nochmal tippen für den Ton");
+  // 🔊 WICHTIG für iPhone
+  music.play().catch(() => {
+    alert("🔊 Bitte nochmal tippen für Ton");
   });
 
   document.querySelector("button").style.display = "none";
@@ -108,6 +109,11 @@ function startCountdown() {
     if (count < 0) {
       clearInterval(interval);
       display.innerText = "";
+
+      // Text ausblenden
+      document.getElementById("text").style.display = "none";
+      document.querySelector("h1").style.display = "none";
+
       startShow();
     }
   }, 1000);
@@ -135,23 +141,27 @@ function startShow() {
       music.pause();
       music.currentTime = 0;
     }
-  }, 2000);
+  }, 2500); // bisschen länger = besser
 }
 
 // 🎆 KONFETTI
 const canvas = document.getElementById("confetti");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let pieces = [];
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 120; i++) {
   pieces.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    size: Math.random() * 5 + 5,
+    size: Math.random() * 6 + 4,
     speed: Math.random() * 3 + 2
   });
 }
