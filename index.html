@@ -53,11 +53,10 @@ canvas {
 
 <body>
 
-<h1>🎂 Alles Gute zum Geburtstag NEGAAA! 🎂</h1>
-
+<h1>🎂 Alles Gute zum Geburtstag! 🎂</h1>
 <p>Bereit? 😏</p>
 
-<button onclick="startExperience()">🎉 Start</button>
+<button onclick="startExperience()">🎉 Start (mit Ton)</button>
 
 <div id="countdown"></div>
 
@@ -76,15 +75,21 @@ canvas {
 <img src="bild11.jpeg">
 <img src="bild12.jpeg">
 
-
-
 <canvas id="confetti"></canvas>
 
 <script>
 function startExperience() {
+  let music = document.getElementById("music");
+
+  // 🔊 Musik direkt beim Klick starten (wichtig für iPhone!)
+  music.play().then(() => {
+    console.log("Musik läuft");
+  }).catch(() => {
+    alert("🔊 Bitte nochmal tippen für den Ton");
+  });
+
   document.querySelector("button").style.display = "none";
 
-  // Vollbild (funktioniert auf vielen Handys)
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen();
   }
@@ -109,29 +114,28 @@ function startCountdown() {
 }
 
 function startShow() {
-  document.getElementById("music").play();
   startConfetti();
 
   let images = document.querySelectorAll("img");
   let current = 0;
 
-  images[current].style.display = "block";
+  images[0].style.display = "block";
 
   let interval = setInterval(() => {
-  images[current].style.display = "none";
-  current++;
+    images[current].style.display = "none";
+    current++;
 
-  if (current < images.length) {
-    images[current].style.display = "block";
-  } else {
-    clearInterval(interval);
+    if (current < images.length) {
+      images[current].style.display = "block";
+    } else {
+      clearInterval(interval);
 
-    // 🎵 Musik stoppen wenn fertig
-    let music = document.getElementById("music");
-    music.pause();
-    music.currentTime = 0;
-  }
-}, 2000);
+      // 🎵 Musik stoppen
+      let music = document.getElementById("music");
+      music.pause();
+      music.currentTime = 0;
+    }
+  }, 2000);
 }
 
 // 🎆 KONFETTI
